@@ -20,4 +20,4 @@ if [ -z "$FITBIT_CLIENT_SECRET" ] ; then
 fi
 
 ensure_docker_image_exists
-docker run --rm -it --mount type=bind,source="$(pwd)",destination=/workspace -e FITBIT_CLIENT_ID=$FITBIT_CLIENT_ID -e FITBIT_CLIENT_SECRET=$FITBIT_CLIENT_SECRET $DOCKER_IMAGE "$@"
+docker run --rm -it --mount type=bind,source="$(pwd)",destination=/workspace -e FITBIT_CLIENT_ID=$FITBIT_CLIENT_ID -e FITBIT_CLIENT_SECRET=$FITBIT_CLIENT_SECRET -e FITBIT_DATABASE=/workspace/fitbit.sqlite $DOCKER_IMAGE "$@"

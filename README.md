@@ -7,7 +7,11 @@ Getting started
 You will need Docker installed, and then run `./setup` to set it up locally. You will only need
 to do this once, and then re-run it again on every update.
 
-Run `./weight-tracker` to run the script.
+You will also need to create a "personal" application at https://dev.fitbit.com/apps/new. Make sure
+the redirect URL is set to `https://localhost:3000`, and make a note of your "OAuth 2.0 Client ID"
+and "Client Secret", you will need those in a moment.
+
+Run `FITBIT_CLIENT_ID=<client ID from above> FITBIT_CLIENT_SECRET=<client secret from above> ./weight-tracker` to run the script.
 
 License
 -------

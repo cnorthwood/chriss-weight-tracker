@@ -2,6 +2,17 @@
 
 from datetime import date
 
-from weight_tracker.fitbit import weight_info
+from weight_tracker.db import last_reading_date, ensure_schema, insert_reading
+from weight_tracker.fitbit import weight_readings
 
-print(weight_info(date(2024, 1, 1), date(2024, 1, 10)))
+
+def add_readings_to_database():
+    if last_reading_date() == date.today():
+        return
+
+    for reading in weight_readings(last_reading_date(), date.today()):
+        insert_reading(reading)
+
+
+ensure_schema()
+add_readings_to_database()
