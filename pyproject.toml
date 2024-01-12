@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "chriss-weight-tracker"
+version = "0.1.0"
+description = ""
+authors = ["Chris Northwood <chrisn@chrisn.xyz>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

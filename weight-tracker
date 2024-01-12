@@ -1,0 +1,13 @@
+#!/bin/sh
+
+DOCKER_IMAGE=chriss-weight-tracker:latest
+
+function ensure_docker_image_exists() {
+  if ! docker image inspect $DOCKER_IMAGE &>/dev/null; then
+    echo "docker image does not exist: run ./setup"
+    exit 1
+  fi
+}
+
+ensure_docker_image_exists
+docker run --rm --mount type=bind,source="$(pwd)",destination=/workspace $DOCKER_IMAGE "$@"
