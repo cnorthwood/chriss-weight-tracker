@@ -9,5 +9,15 @@ function ensure_docker_image_exists() {
   fi
 }
 
+if [ -z "$FITBIT_CLIENT_ID" ] ; then
+  echo "FITBIT_CLIENT_ID is unset, unable to continue"
+  exit 1
+fi
+
+if [ -z "$FITBIT_CLIENT_SECRET" ] ; then
+  echo "FITBIT_CLIENT_SECRET is unset, unable to continue"
+  exit 1
+fi
+
 ensure_docker_image_exists
-docker run --rm --mount type=bind,source="$(pwd)",destination=/workspace $DOCKER_IMAGE "$@"
+docker run --rm -it --mount type=bind,source="$(pwd)",destination=/workspace -e FITBIT_CLIENT_ID=$FITBIT_CLIENT_ID -e FITBIT_CLIENT_SECRET=$FITBIT_CLIENT_SECRET $DOCKER_IMAGE "$@"
