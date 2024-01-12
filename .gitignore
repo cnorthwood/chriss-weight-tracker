@@ -2,3 +2,4 @@
 *.pyo
 __pycache__
 fitbit.sqlite
+Weight_Tracker.tsv
