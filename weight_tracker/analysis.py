@@ -81,5 +81,5 @@ def _mean_reading_for(reading_f, fallback_f, start_day, end_day=None):
     return mean(readings)
 
 
-def bmi(weight, height=1.85):
+def bmi(weight, height=1.83):
     return weight / height**2
