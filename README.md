@@ -4,18 +4,20 @@ Chris's weight tracker
 Getting started
 ---------------
 
-You will need Docker installed, and then run `./setup` to set it up locally. You will only need
-to do this once, and then re-run it again on every update.
+You will need Python and Poetry installed, then run `poetry install`.
 
-You will also need to create a "personal" application at https://dev.fitbit.com/apps/new. Make sure
+You will need to create a "personal" application at https://dev.fitbit.com/apps/new. Make sure
 the redirect URL is set to `https://localhost:3000`, and make a note of your "OAuth 2.0 Client ID"
 and "Client Secret", you will need those in a moment.
 
-Run `FITBIT_CLIENT_ID=<client ID from above> FITBIT_CLIENT_SECRET=<client secret from above> ./weight-tracker` to run the script.
+To login, run:
+
+Run `FITBIT_DATABASE=fitbit.sqlite FITBIT_CLIENT_ID=<client ID from above> FITBIT_CLIENT_SECRET=<client secret from above> poetry run python3 -mweight_tracker --login` to login.
 You will be given a URL to visit, which will then authorise the script. You will then be redirected to a localhost URL,
 but will get a "connection refused" error. This is fine, what you want is the URL in your address bar to copy and paste
 into the app.
 
+Once you have logged in, you can write the output to a tsv file, `poetry run python3 -mweight_tracker --tsv-file Weight_Tracker.tsv`.
 Your outputs are now in `Weight_Tracker.tsv`, you can copy/paste this into a Google Sheet, e.g., `pbcopy < Weight_Tracker.tsv`.
 I use a Google Sheet because it has some conditional formatting on it (e.g., I use colour coding for if I'm
 tracking the direction I'd like to go or not) and then I can plot some charts etc in it.
@@ -26,6 +28,11 @@ row in your data is consistent, so you can keep copy/pasting in the top corner o
 The data it outputs is the data I like to track - which importantly includes a 7-day moving average so I can
 weigh daily but get some cleaner data to track my progress. I [wrote a blog post about how I track my weight](https://cnorthwood.medium.com/tracking-losing-weight-78eadc616507)
 which gives a bit of rationale.
+
+Deploying to k8s
+----------------
+
+TODO
 
 License
 -------

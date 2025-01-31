@@ -1,9 +1,7 @@
-from contextlib import closing
-from datetime import datetime
+from datetime import datetime, date, time
+import json
 import os
 import sqlite3
-
-from weight_tracker.fitbit import reading_datetime
 
 db = sqlite3.connect(os.environ["FITBIT_DATABASE"])
 cursor = db.cursor()
@@ -19,6 +17,31 @@ def ensure_schema():
             fat REAL
         )
         """
+    )
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS auth_tokens (
+            name TEXT PRIMARY KEY,
+            token TEXT
+        )
+        """
+    )
+    db.commit()
+
+
+def load_token(token_name):
+    result = cursor.execute("SELECT token FROM auth_tokens WHERE name = ?", (token_name,)).fetchone()
+
+    if result is None:
+        return None
+
+    return json.loads(result[0])
+
+
+def save_token(token_name, token):
+    cursor.execute(
+        "INSERT OR REPLACE INTO auth_tokens (name, token) VALUES (?, ?)",
+        (token_name, json.dumps(token))
     )
     db.commit()
 
@@ -89,3 +112,9 @@ def get_last_known_fat_at(point_in_time):
         ).fetchone()
 
     return result[0]
+
+
+def reading_datetime(reading):
+    return datetime.combine(
+        date.fromisoformat(reading["date"]), time.fromisoformat(reading["time"])
+    )

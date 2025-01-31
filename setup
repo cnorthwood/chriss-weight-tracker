@@ -1,5 +1,0 @@
-#!/bin/sh
-
-DOCKER_IMAGE=chriss-weight-tracker:latest
-
-docker build -t $DOCKER_IMAGE $(dirname "$(realpath "$0")")

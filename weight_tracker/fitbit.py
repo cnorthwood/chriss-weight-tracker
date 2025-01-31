@@ -1,6 +1,15 @@
-from datetime import date, timedelta, datetime, time
+from datetime import date, timedelta
 
 from weight_tracker.auth import oauth_session
+from weight_tracker.db import last_reading_date, insert_reading
+
+
+def add_readings_to_database():
+    if last_reading_date() == date.today():
+        return
+
+    for reading in weight_readings(last_reading_date(), date.today()):
+        insert_reading(reading)
 
 
 def weight_readings(range_start: date | None, range_end: date | None):
@@ -27,9 +36,3 @@ def _chunked_date_ranges(start_date: date | None, end_date: date | None):
         yield from _chunked_date_ranges(start_date, end_date - timedelta(days=31))
     else:
         yield start_date, end_date
-
-
-def reading_datetime(reading):
-    return datetime.combine(
-        date.fromisoformat(reading["date"]), time.fromisoformat(reading["time"])
-    )

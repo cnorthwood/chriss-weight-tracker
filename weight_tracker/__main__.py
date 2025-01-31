@@ -1,19 +1,9 @@
 #!/usr/bin/env python3
 
-from datetime import date
+import argparse
 import sys
 
-from weight_tracker.analysis import day_data, days
-from weight_tracker.db import last_reading_date, ensure_schema, insert_reading
-from weight_tracker.fitbit import weight_readings
-
-
-def add_readings_to_database():
-    if last_reading_date() == date.today():
-        return
-
-    for reading in weight_readings(last_reading_date(), date.today()):
-        insert_reading(reading)
+from weight_tracker.db import ensure_schema
 
 
 def write_tsv(filename, data):
@@ -44,6 +34,22 @@ def write_tsv(filename, data):
             output_tsv.write("\t".join(fields) + "\n")
 
 
+parser = argparse.ArgumentParser()
+modes = parser.add_mutually_exclusive_group()
+modes.add_argument("--login", help="run the initial login process", action="store_true")
+modes.add_argument("--save-tsv", help="save the results to a TSV file")
+args = parser.parse_args()
+
 ensure_schema()
-add_readings_to_database()
-write_tsv(sys.argv[1], (day_data(day) for day in days()))
+if args.login:
+    from weight_tracker.auth import login
+
+    login()
+elif args.save_tsv:
+    from weight_tracker.analysis import day_data, days
+    from weight_tracker.fitbit import add_readings_to_database
+
+    add_readings_to_database()
+    write_tsv(args.save_tsv, (day_data(day) for day in days()))
+else:
+    parser.print_help()
