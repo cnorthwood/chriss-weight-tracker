@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta, time, datetime
 from statistics import mean
 
@@ -81,5 +82,6 @@ def _mean_reading_for(reading_f, fallback_f, start_day, end_day=None):
     return mean(readings)
 
 
-def bmi(weight, height=1.83):
+def bmi(weight):
+    height = int(os.environ["HEIGHT"]) / 100
     return weight / height**2

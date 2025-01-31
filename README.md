@@ -17,7 +17,7 @@ You will be given a URL to visit, which will then authorise the script. You will
 but will get a "connection refused" error. This is fine, what you want is the URL in your address bar to copy and paste
 into the app.
 
-Once you have logged in, you can write the output to a tsv file, `poetry run python3 -mweight_tracker --tsv-file Weight_Tracker.tsv`.
+Once you have logged in, you can write the output to a tsv file, `FITBIT_DATABASE=fitbit.sqlite FITBIT_CLIENT_ID=<client ID from above> FITBIT_CLIENT_SECRET=<client secret from above> HEIGHT=<your height in cm> poetry run python3 -mweight_tracker --tsv-file Weight_Tracker.tsv`.
 Your outputs are now in `Weight_Tracker.tsv`, you can copy/paste this into a Google Sheet, e.g., `pbcopy < Weight_Tracker.tsv`.
 I use a Google Sheet because it has some conditional formatting on it (e.g., I use colour coding for if I'm
 tracking the direction I'd like to go or not) and then I can plot some charts etc in it.
