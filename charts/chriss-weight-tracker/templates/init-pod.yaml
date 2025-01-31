@@ -1,0 +1,14 @@
+{{- if .Values.createInitPod }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: '{{ include "chriss-weight-tracker.fullname" . }}-init'
+  labels:
+    {{- include "chriss-weight-tracker.labels" . | nindent 4 }}
+  annotations:
+    {{- with .Values.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- include "chriss-weight-tracker.podSpec" . | nindent 2 }}
+{{- end }}

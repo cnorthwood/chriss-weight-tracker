@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: '{{ include "chriss-weight-tracker.fullname" . }}-db'
+  labels:
+    {{- include "chriss-weight-tracker.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "{{ .Values.dbStorageRequest }}"
+  {{- if .Values.dbStorageClassName }}
+  storageClassName: "{{ .Values.dbStorageClassName }}"
+  {{- end }}

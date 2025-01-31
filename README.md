@@ -39,7 +39,26 @@ Now you can run the command `FITBIT_DATABASE=fitbit.sqlite FITBIT_CLIENT_ID=<cli
 Deploying to k8s
 ----------------
 
-TODO
+You will need to create 2 secrets:
+
+    kubectl create secret generic fitbit-app --from-literal=FITBIT_CLIENT_ID=<client ID from above> --from-literal=FITBIT_CLIENT_SECRET=<client secret from above>
+    kubectl create secret generic google-service-account --from-file=service-account.json=./service-account.json
+
+Now you can install the chart into your cluster:
+
+    helm install --set 'height=180' --set 'googleSheetUrl=https://docs.google.com/...' chriss-weight-tracker ./charts/chriss-weight-tracker/
+
+We now need to log into Fitbit and get this token stored. This can be a bit fiddly. First we need to create a pod we can use:
+
+    helm template chriss-weight-tracker charts/chriss-weight-tracker/ --set createInitPod=true -s templates/init-pod.yaml | kubectl apply -f -
+
+Now get a shell in the pod and go through the login process.
+
+And finally remove that pod: `kubectl delete pod chriss-weight-tracker-init`
+
+Now, trigger a run manually to check it works:
+
+    kubectl create job --from=cronjob/chriss-weight-tracker-scheduled-job chriss-weight-tracker-run
 
 License
 -------
