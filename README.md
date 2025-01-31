@@ -10,9 +10,7 @@ You will need to create a "personal" application at https://dev.fitbit.com/apps/
 the redirect URL is set to `https://localhost:3000`, and make a note of your "OAuth 2.0 Client ID"
 and "Client Secret", you will need those in a moment.
 
-To login, run:
-
-Run `FITBIT_DATABASE=fitbit.sqlite FITBIT_CLIENT_ID=<client ID from above> FITBIT_CLIENT_SECRET=<client secret from above> poetry run python3 -mweight_tracker --login` to login.
+To login, run `FITBIT_DATABASE=fitbit.sqlite FITBIT_CLIENT_ID=<client ID from above> FITBIT_CLIENT_SECRET=<client secret from above> poetry run python3 -mweight_tracker --login`.
 You will be given a URL to visit, which will then authorise the script. You will then be redirected to a localhost URL,
 but will get a "connection refused" error. This is fine, what you want is the URL in your address bar to copy and paste
 into the app.
@@ -28,6 +26,15 @@ row in your data is consistent, so you can keep copy/pasting in the top corner o
 The data it outputs is the data I like to track - which importantly includes a 7-day moving average so I can
 weigh daily but get some cleaner data to track my progress. I [wrote a blog post about how I track my weight](https://cnorthwood.medium.com/tracking-losing-weight-78eadc616507)
 which gives a bit of rationale.
+
+You can also have this write directly to the Google Sheet if you'd like. To do this, first create a Google service account:
+
+1. Open https://console.developers.google.com/apis/library and find sheets. Make sure it's enabled, and if necessary, create a project.
+2. Under the IAM admin in the Google Cloud console, create a service account. You can leave everything as default.
+3. Make a note of the service account email, and share your Google Sheet with this email account.
+4. On the service account screen, create a key and download it in JSON form.
+
+Now you can run the command `FITBIT_DATABASE=fitbit.sqlite FITBIT_CLIENT_ID=<client ID from above> FITBIT_CLIENT_SECRET=<client secret from above> GOOGLE_SERVICE_ACCOUNT=service-account.json HEIGHT=<your height in cm> poetry run python3 -mweight_tracker --google-sheet <sheet URL>`
 
 Deploying to k8s
 ----------------

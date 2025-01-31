@@ -3,6 +3,8 @@ FROM alpine:3.21
 RUN apk --update-cache add python3 poetry
 
 ADD pyproject.toml /app/
+ADD poetry.lock /app/
+ADD README.md /app/
 ADD weight_tracker /app/weight_tracker/
 
 WORKDIR /app

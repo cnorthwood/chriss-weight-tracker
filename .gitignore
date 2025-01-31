@@ -2,4 +2,5 @@
 *.pyo
 __pycache__
 fitbit.sqlite
+service-account.json
 Weight_Tracker.tsv
