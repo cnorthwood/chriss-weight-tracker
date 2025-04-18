@@ -46,7 +46,7 @@ You will need to create 2 secrets:
 
 Now you can install the chart into your cluster:
 
-    helm install --set 'height=180' --set 'googleSheetUrl=https://docs.google.com/...' chriss-weight-tracker ./charts/chriss-weight-tracker/
+    helm install chriss-weight-tracker --set 'height=180' --set 'googleSheetUrl=https://docs.google.com/...' ./charts/chriss-weight-tracker/
 
 We now need to log into Fitbit and get this token stored. This can be a bit fiddly. First we need to create a pod we can use:
 

@@ -1,0 +1,52 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - build image to GHCR
+    types: [completed]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: log in to k8s
+        id: k8s_auth
+        uses: omelette-gay/vault-k8s-login-action@v1
+        with:
+          vault-github-role: github-weight-tracker
+          vault-k8s-namespace: weight-tracker
+          vault-k8s-role: github-weight-tracker
+          vault-server: https://vault.coven.omelette.gay
+          k8s-controller-url: https://strix.xdc.omelette.gay:6443
+          k8s-controller-ca: |
+            -----BEGIN CERTIFICATE-----
+            MIIBdjCCAR2gAwIBAgIBADAKBggqhkjOPQQDAjAjMSEwHwYDVQQDDBhrM3Mtc2Vy
+            dmVyLWNhQDE3MzM0NDE5MzkwHhcNMjQxMjA1MjMzODU5WhcNMzQxMjAzMjMzODU5
+            WjAjMSEwHwYDVQQDDBhrM3Mtc2VydmVyLWNhQDE3MzM0NDE5MzkwWTATBgcqhkjO
+            PQIBBggqhkjOPQMBBwNCAAStSdti1Jm75qbFBu/1/d/KUEr6g8Fv/Ppsq+sd8YNJ
+            wzLdW8vlLn4GW9ScVwzkUP6l9uAOSCCtxSkS6LlPmj/xo0IwQDAOBgNVHQ8BAf8E
+            BAMCAqQwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUku8WL0M88576doqpq+Ie
+            mZVIDV4wCgYIKoZIzj0EAwIDRwAwRAIgO+dcJF/aO0G0bRpYwX6sIzSoK4jD809f
+            vCyvWCodXqQCIFn+wIsfK9e2QFftm/idiRRRhpqHVcP4F0HUaTuNNsz2
+            -----END CERTIFICATE-----
+
+      - name: write kubeconfig out
+        run: |
+          mkdir ~/.kube
+          cat >~/.kube/config <<EOF
+          ${{ steps.k8s_auth.outputs.kubeconfig }}
+          EOF
+
+      - name: deploy Chris's config
+        run: helm install -n weight-tracker chriss-weight-tracker 
+          --set 'height=180' 
+          --set 'googleSheetUrl=https://docs.google.com/spreadsheets/d/13Gju49oX0nu73Wlw6hRXqEC4YZOROQb3tJcbaQrtZ0w/edit'
+          ./charts/chriss-weight-tracker/
