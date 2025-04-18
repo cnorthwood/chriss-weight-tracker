@@ -48,5 +48,6 @@ jobs:
       - name: deploy Chris's config
         run: helm upgrade --install
           -n weight-tracker chriss-weight-tracker ./charts/chriss-weight-tracker/
-          --set 'height=180' 
+          --set 'height=180'
+          --set 'fitbitSecretName=chris-fitbit'
           --set 'googleSheetUrl=https://docs.google.com/spreadsheets/d/13Gju49oX0nu73Wlw6hRXqEC4YZOROQb3tJcbaQrtZ0w/edit'
