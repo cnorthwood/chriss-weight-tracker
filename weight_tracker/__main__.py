@@ -11,7 +11,7 @@ def run_as_cli(tsv_file, google_sheet_url):
     from weight_tracker.analysis import day_data, days
     from weight_tracker.fitbit import add_readings_to_database
 
-    oauth_session, auth_url = start_login()
+    oauth_session, auth_url, _ = start_login()
     print(f"Now visit {auth_url} and copy the URL you are redirected to")
     response_url = input("Paste the redirect URL here: ")
     complete_login(oauth_session, response_url)
@@ -30,6 +30,7 @@ def run_as_cli(tsv_file, google_sheet_url):
         write_google_sheet(google_sheet_url, data)
 
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--server", help="start a webserver serving on the specified port which when accessed takes you through the auth process and syncs the results to a Google Sheet")
@@ -41,7 +42,12 @@ def main():
 
     if args.save_tsv or args.google_sheet:
         if args.server:
-            pass
+            from weight_tracker.server import Server, app
+
+            app.config["tsv_file"] = args.save_tsv
+            app.config["google_sheet_url"] = args.google_sheet
+            Server(port=int(args.server)).run()
+
         else:
             run_as_cli(args.save_tsv, args.google_sheet)
 
