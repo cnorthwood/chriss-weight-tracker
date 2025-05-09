@@ -51,7 +51,7 @@ You will need to create 2 secrets:
 
 Now you can install the chart into your cluster:
 
-    helm install chriss-weight-tracker --set 'height=180' --set 'fitbitRedirectUri=https://my-redirect-uri' --set 'googleSheetUrl=https://docs.google.com/...' ./charts/chriss-weight-tracker/
+    helm install chriss-weight-tracker --set 'height=180' --set 'ingress.hostname=my-redirect-uri' --set 'googleSheetUrl=https://docs.google.com/...' ./charts/chriss-weight-tracker/
 
 Now you should be able to visit the URL specified in the fitbitRedirectUri param and you will go through the Fitbit login
 process and it will sync to the specified Google sheet.

@@ -65,19 +65,16 @@ containers:
     imagePullPolicy: "{{ .Values.image.pullPolicy }}"
     securityContext:
       {{- toYaml .Values.securityContext | nindent 6 }}
-    {{- if .Values.createInitPod }}
-    command:
-      - /bin/sleep
-    args:
-      - infinity
-    {{- else }}
     args:
       - "--google-sheet"
       - "{{ .Values.googleSheetUrl }}"
-    {{- end }}
+      - "--server"
+      - "{{ .Values.service.port }}"
     env:
       - name: FITBIT_DATABASE
         value: "/data/db/fitbit.sqlite"
+      - name: FITBIT_REDIRECT_URI
+        value: https://{{ .Values.ingress.hostname }}/
       - name: FITBIT_CLIENT_ID
         valueFrom:
           secretKeyRef:

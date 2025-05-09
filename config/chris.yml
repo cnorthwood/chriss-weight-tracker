@@ -1,0 +1,14 @@
+height: 180
+googleSheetUrl: https://docs.google.com/spreadsheets/d/13Gju49oX0nu73Wlw6hRXqEC4YZOROQb3tJcbaQrtZ0w/edit
+
+fitbitSecretName: chris-fitbit
+
+ingress:
+  hostname: chris.weight-tracker.omelette.gay
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: "kube-system-redirect-https@kubernetescrd"
+    tls:
+      - hosts:
+          - chris.weight-tracker.omelette.gay
+        secretName: chris-ingress-tls
