@@ -8,7 +8,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.middlewares: "kube-system-redirect-https@kubernetescrd"
-    tls:
-      - hosts:
-          - chris.weight-tracker.omelette.gay
-        secretName: chris-ingress-tls
+  tls:
+    - hosts:
+        - chris.weight-tracker.omelette.gay
+      secretName: chris-ingress-tls
