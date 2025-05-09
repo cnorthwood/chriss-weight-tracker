@@ -18,31 +18,6 @@ def ensure_schema():
         )
         """
     )
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS auth_tokens (
-            name TEXT PRIMARY KEY,
-            token TEXT
-        )
-        """
-    )
-    db.commit()
-
-
-def load_token(token_name):
-    result = cursor.execute("SELECT token FROM auth_tokens WHERE name = ?", (token_name,)).fetchone()
-
-    if result is None:
-        return None
-
-    return json.loads(result[0])
-
-
-def save_token(token_name, token):
-    cursor.execute(
-        "INSERT OR REPLACE INTO auth_tokens (name, token) VALUES (?, ?)",
-        (token_name, json.dumps(token))
-    )
     db.commit()
 
 
