@@ -18,4 +18,64 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- include "chriss-weight-tracker.podSpec" . | nindent 6 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ include "chriss-weight-tracker.fullname" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 13 }}
+          args:
+            - "--google-sheet"
+            - "{{ .Values.googleSheetUrl }}"
+            - "--server"
+            - "{{ .Values.service.port }}"
+          env:
+            - name: FITBIT_DATABASE
+              value: "/data/db/fitbit.sqlite"
+            - name: FITBIT_REDIRECT_URI
+              value: https://{{ .Values.ingress.hostname }}/
+            - name: FITBIT_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.fitbitSecretName }}"
+                  key: FITBIT_CLIENT_ID
+            - name: FITBIT_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.fitbitSecretName }}"
+                  key: FITBIT_CLIENT_SECRET
+            - name: GOOGLE_SERVICE_ACCOUNT
+              value: "/data/google-service-account/service-account.json"
+            - name: HEIGHT
+              value: "{{ .Values.height }}"
+          volumeMounts:
+            - mountPath: /data/google-service-account
+              name: google-service-account
+            - mountPath: /data/db
+              name: db
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: google-service-account
+          secret:
+            secretName: "{{ .Values.googleServiceAccountSecretName }}"
+        - name: db
+          persistentVolumeClaim:
+            claimName: '{{ include "chriss-weight-tracker.fullname" . }}-db'
+      restartPolicy: Always
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
