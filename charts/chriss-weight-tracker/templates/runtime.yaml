@@ -57,6 +57,9 @@ spec:
               name: google-service-account
             - mountPath: /data/db
               name: db
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
