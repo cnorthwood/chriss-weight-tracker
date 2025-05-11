@@ -29,12 +29,13 @@ spec:
     - host: {{ .Values.ingress.hostname }}
       http:
         paths:
-          - backend:
+          - path: /
+            pathType: Prefix
+            backend:
               service:
                 name: {{ include "chriss-weight-tracker.fullname" . }}
                 port:
                   name: http
-            pathType: Prefix
   tls:
     {{- with .Values.ingress.tls }}
     {{- toYaml . | nindent 4 }}
