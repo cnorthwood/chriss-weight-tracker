@@ -1,5 +1,7 @@
+import os
+
 from flask import Flask, redirect, request
-import gunicorn.app.base
+from gunicorn.app.base import BaseApplication as GunicornBaseApplication
 
 from weight_tracker.analysis import day_data, days
 from weight_tracker.auth import start_login, complete_login
@@ -8,7 +10,7 @@ from weight_tracker.google_sheet import write_google_sheet
 from weight_tracker.tsv_file import write_tsv
 
 
-class Server(gunicorn.app.base.BaseApplication):
+class Server(GunicornBaseApplication):
     def __init__(self, port):
         self.port = port
         super().__init__()
@@ -22,6 +24,11 @@ class Server(gunicorn.app.base.BaseApplication):
 
 
 app = Flask(__name__)
+if os.environ.get("TRUST_PROXY_HEADERS") == "true":
+    from werkzeug.middleware.proxy_fix import ProxyFix
+
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
+
 
 @app.route("/")
 def main():

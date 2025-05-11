@@ -52,6 +52,8 @@ spec:
               value: "/data/google-service-account/service-account.json"
             - name: HEIGHT
               value: "{{ .Values.height }}"
+            - name: TRUST_PROXY_HEADERS
+              value: "true"
           volumeMounts:
             - mountPath: /data/google-service-account
               name: google-service-account
