@@ -36,7 +36,7 @@ jobs:
           tags: ghcr.io/${{ github.repository }}:latest
 
       - name: provide attestation for artefact
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v3
         with:
           subject-name: ghcr.io/${{ github.repository }}
           subject-digest: ${{ steps.push.outputs.digest }}
