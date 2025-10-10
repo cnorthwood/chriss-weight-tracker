@@ -47,4 +47,6 @@ jobs:
 
       - name: deploy Chris's config
         run: helm upgrade --install -n weight-tracker
-          chriss-weight-tracker ./charts/chriss-weight-tracker/ -f ./config/chris.yml
+          chriss-weight-tracker ./charts/chriss-weight-tracker/
+          --set image.tag=${{ github.sha }}
+          -f ./config/chris.yml
