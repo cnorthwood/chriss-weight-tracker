@@ -44,8 +44,9 @@ def main():
 
         if app.config.get("google_sheet_url"):
             write_google_sheet(app.config["google_sheet_url"], data)
-
-        return "OK"
+            return redirect(app.config["google_sheet_url"], 303)
+        else:
+            return "OK"
     else:
         _, redirect_url, _ = start_login()
         return redirect(redirect_url)
