@@ -15,7 +15,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: log in to k8s
         id: k8s_auth
