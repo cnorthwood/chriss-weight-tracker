@@ -8,12 +8,6 @@ height: ""
 # the URL of the Google Sheet to output into
 googleSheetUrl: ""
 
-# the schedule to run this job at
-cronSchedule: "30 11 * * *"
-
-# the time zone the cron schedule is evalauted against
-cronTimeZone: "Europe/London"
-
 # the name of the secret to read the Fitbit credentials from - this must have two keys in it, FITBIT_CLIENT_ID and FITBIT_CLIENT_SECRET
 fitbitSecretName: fitbit-app
 
