@@ -1,0 +1,14 @@
+height: 185
+googleSheetUrl: https://docs.google.com/spreadsheets/d/1WC4_CCVEiTwaCj-gG-5IscpNqcNvuE96re_lN6U3ty0/edit?gid=0
+
+fitbitSecretName: meg-fitbit
+
+ingress:
+  hostname: meg.weight-tracker.omelette.gay
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.middlewares: "kube-system-redirect-https@kubernetescrd"
+  tls:
+    - hosts:
+        - meg.weight-tracker.omelette.gay
+      secretName: meg-ingress-tls

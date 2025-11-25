@@ -53,6 +53,7 @@ jobs:
       matrix:
         config:
           - chris
+          - meg
     steps:
       - uses: actions/checkout@v6
 
