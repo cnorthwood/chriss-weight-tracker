@@ -12,3 +12,7 @@ ingress:
     - hosts:
         - meg.weight-tracker.omelette.gay
       secretName: meg-ingress-tls
+
+dbStoragePvcLabels:
+  recurring-job.longhorn.io/source: enabled
+  recurring-job.longhorn.io/nightly-backup: enabled

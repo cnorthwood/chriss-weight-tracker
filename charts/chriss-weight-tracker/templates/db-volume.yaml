@@ -4,6 +4,7 @@ metadata:
   name: '{{ include "chriss-weight-tracker.fullname" . }}-db'
   labels:
     {{- include "chriss-weight-tracker.labels" . | nindent 4 }}
+    {{- toYaml .Values.dbStoragePvcLabels | nindent 4 }}
 spec:
   accessModes:
     - ReadWriteOnce

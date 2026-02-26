@@ -19,6 +19,7 @@ dbStorageRequest: 100Mi
 
 # the class of storage to be requested
 dbStorageClassName: ""
+dbStoragePvcLabels: {}
 
 service:
   type: ClusterIP
