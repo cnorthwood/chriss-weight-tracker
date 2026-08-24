@@ -6,6 +6,8 @@ metadata:
     {{- include "chriss-weight-tracker.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "chriss-weight-tracker.selectorLabels" . | nindent 6 }}
