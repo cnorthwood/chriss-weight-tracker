@@ -13,8 +13,7 @@ def ensure_schema():
         CREATE TABLE IF NOT EXISTS readings (
             logId INTEGER PRIMARY KEY,
             readingDate TEXT,
-            weight REAL,
-            fat REAL
+            weight REAL
         )
         """
     )
@@ -36,12 +35,11 @@ def first_reading_date():
 
 def insert_reading(reading):
     cursor.execute(
-        "INSERT INTO readings (logId, readingDate, weight, fat) VALUES(?, ?, ?, ?) ON CONFLICT DO NOTHING",
+        "INSERT INTO readings (logId, readingDate, weight) VALUES(?, ?, ?) ON CONFLICT DO NOTHING",
         (
             reading["logId"],
             reading_datetime(reading).isoformat(),
             reading["weight"],
-            reading.get("fat"),
         ),
     )
     db.commit()
@@ -63,27 +61,6 @@ def get_last_known_weight_at(point_in_time):
     if result is None:
         result = cursor.execute(
             "SELECT weight FROM readings ORDER BY readingDate ASC LIMIT 1"
-        ).fetchone()
-
-    return result[0]
-
-
-def get_fat_in_range(start_time, end_time):
-    results = cursor.execute(
-        "SELECT fat FROM readings WHERE readingDate >= ? AND readingDate <= ? AND fat IS NOT NULL",
-        (start_time.isoformat(), end_time.isoformat()),
-    ).fetchall()
-    return [result[0] for result in results]
-
-
-def get_last_known_fat_at(point_in_time):
-    result = cursor.execute(
-        "SELECT fat FROM readings WHERE readingDate <= ? AND fat IS NOT NULL ORDER BY readingDate DESC LIMIT 1",
-        (point_in_time.isoformat(),),
-    ).fetchone()
-    if result is None:
-        result = cursor.execute(
-            "SELECT fat FROM readings WHERE fat IS NOT NULL ORDER BY readingDate ASC LIMIT 1"
         ).fetchone()
 
     return result[0]
