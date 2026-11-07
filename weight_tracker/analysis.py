@@ -6,9 +6,7 @@ from weight_tracker.db import (
     last_reading_date,
     first_reading_date,
     get_weight_in_range,
-    get_fat_in_range,
     get_last_known_weight_at,
-    get_last_known_fat_at,
 )
 
 
@@ -24,49 +22,30 @@ def day_data(day):
     last_month = day - timedelta(days=30)
 
     todays_weight = weight_for(day)
-    todays_fat = fat_for(day)
     moving_average_weight = weight_for(last_week, day)
-    moving_average_fat = fat_for(last_week, day)
     last_weeks_moving_average_weight = weight_for(
         last_week - timedelta(days=7), last_week
     )
-    last_weeks_moving_average_fat = fat_for(last_week - timedelta(days=7), last_week)
     last_months_moving_average_weight = weight_for(
         last_month - timedelta(days=7), last_month
     )
-    last_months_moving_average_fat = fat_for(last_month - timedelta(days=7), last_month)
 
     return {
         "date": day.strftime("%d/%m/%Y"),
         "weight": f"{todays_weight:.1f}",
         "bmi": f"{bmi(todays_weight):.2f}",
-        "fat_percentage": f"{todays_fat:.3f}",
-        "fat_weight": f"{todays_fat * todays_weight:.1f}",
         "moving_average_weight": f"{moving_average_weight:.1f}",
         "moving_average_bmi": f"{bmi(moving_average_weight):.2f}",
-        "moving_average_fat_percentage": f"{moving_average_fat:.3f}",
-        "moving_average_fat_weight": f"{moving_average_fat * moving_average_weight:.1f}",
         "weekly_weight_delta": f"{moving_average_weight - last_weeks_moving_average_weight:.1f}",
         "weekly_bmi_delta": f"{bmi(moving_average_weight) - bmi(last_weeks_moving_average_weight):.2f}",
-        "weekly_fat_percentage_delta": f"{moving_average_fat - last_weeks_moving_average_fat:.3f}",
-        "weekly_fat_weight_delta": f"{moving_average_fat * moving_average_weight - last_weeks_moving_average_fat * last_weeks_moving_average_weight:.1f}",
         "monthly_weight_delta": f"{moving_average_weight - last_months_moving_average_weight:.1f}",
         "monthly_bmi_delta": f"{bmi(moving_average_weight) - bmi(last_months_moving_average_weight):.2f}",
-        "monthly_fat_percentage_delta": f"{moving_average_fat - last_months_moving_average_fat:.3f}",
-        "monthly_fat_weight_delta": f"{moving_average_fat * moving_average_weight - last_months_moving_average_fat * last_months_moving_average_weight:.1f}",
     }
 
 
 def weight_for(start_day, end_day=None):
     return _mean_reading_for(
         get_weight_in_range, get_last_known_weight_at, start_day, end_day
-    )
-
-
-def fat_for(start_day, end_day=None):
-    return (
-        _mean_reading_for(get_fat_in_range, get_last_known_fat_at, start_day, end_day)
-        / 100
     )
 
 
