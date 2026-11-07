@@ -32,7 +32,9 @@ if os.environ.get("TRUST_PROXY_HEADERS") == "true":
 
 @app.route("/")
 def main():
-    if request.args.get("state"):
+    if request.args.get("error"):
+        return "Login failed", 400
+    elif request.args.get("state"):
         oauth_session, _, _ = start_login(request.args["state"])
         complete_login(oauth_session, request.url)
 

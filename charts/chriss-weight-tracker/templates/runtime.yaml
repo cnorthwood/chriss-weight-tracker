@@ -36,20 +36,20 @@ spec:
             - "--server"
             - "{{ .Values.service.port }}"
           env:
-            - name: FITBIT_DATABASE
+            - name: WEIGHT_DATABASE
               value: "/data/db/fitbit.sqlite"
-            - name: FITBIT_REDIRECT_URI
+            - name: GOOGLE_REDIRECT_URI
               value: https://{{ .Values.ingress.hostname }}/
-            - name: FITBIT_CLIENT_ID
+            - name: GOOGLE_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.fitbitSecretName }}"
-                  key: FITBIT_CLIENT_ID
-            - name: FITBIT_CLIENT_SECRET
+                  name: "{{ .Values.googleOAuthSecretName }}"
+                  key: GOOGLE_CLIENT_ID
+            - name: GOOGLE_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.fitbitSecretName }}"
-                  key: FITBIT_CLIENT_SECRET
+                  name: "{{ .Values.googleOAuthSecretName }}"
+                  key: GOOGLE_CLIENT_SECRET
             - name: GOOGLE_SERVICE_ACCOUNT
               value: "/data/google-service-account/service-account.json"
             - name: HEIGHT

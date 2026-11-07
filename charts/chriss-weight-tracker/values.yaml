@@ -8,8 +8,8 @@ height: ""
 # the URL of the Google Sheet to output into
 googleSheetUrl: ""
 
-# the name of the secret to read the Fitbit credentials from - this must have two keys in it, FITBIT_CLIENT_ID and FITBIT_CLIENT_SECRET
-fitbitSecretName: fitbit-app
+# the name of the secret to read the Google OAuth client credentials from - this must have two keys in it, GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
+googleOAuthSecretName: google-oauth
 
 # the name of the secret to read the Google service account credentials from - the body of the json file must be stored in the key `service-account.json` in this secret
 googleServiceAccountSecretName: google-service-account

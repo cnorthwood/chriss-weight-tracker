@@ -3,7 +3,7 @@ import json
 import os
 import sqlite3
 
-db = sqlite3.connect(os.environ["FITBIT_DATABASE"])
+db = sqlite3.connect(os.environ["WEIGHT_DATABASE"])
 cursor = db.cursor()
 
 
