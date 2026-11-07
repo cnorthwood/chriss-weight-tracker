@@ -5,7 +5,7 @@ from gunicorn.app.base import BaseApplication as GunicornBaseApplication
 
 from weight_tracker.analysis import day_data, days
 from weight_tracker.auth import start_login, complete_login
-from weight_tracker.fitbit import add_readings_to_database
+from weight_tracker.google_health import add_readings_to_database
 from weight_tracker.google_sheet import write_google_sheet
 from weight_tracker.tsv_file import write_tsv
 
@@ -32,7 +32,9 @@ if os.environ.get("TRUST_PROXY_HEADERS") == "true":
 
 @app.route("/")
 def main():
-    if request.args.get("state"):
+    if request.args.get("error"):
+        return "Login failed", 400
+    elif request.args.get("state"):
         oauth_session, _, _ = start_login(request.args["state"])
         complete_login(oauth_session, request.url)
 

@@ -1,7 +1,7 @@
 height: 185
 googleSheetUrl: https://docs.google.com/spreadsheets/d/1WC4_CCVEiTwaCj-gG-5IscpNqcNvuE96re_lN6U3ty0/edit?gid=0
 
-fitbitSecretName: meg-fitbit
+googleOAuthSecretName: google-oauth
 
 ingress:
   hostname: meg.weight-tracker.omelette.gay
