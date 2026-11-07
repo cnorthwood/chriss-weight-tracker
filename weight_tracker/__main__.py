@@ -9,7 +9,7 @@ from weight_tracker.db import ensure_schema
 def run_as_cli(tsv_file, google_sheet_url):
     from weight_tracker.auth import start_login, complete_login
     from weight_tracker.analysis import day_data, days
-    from weight_tracker.fitbit import add_readings_to_database
+    from weight_tracker.google_health import add_readings_to_database
 
     oauth_session, auth_url, _ = start_login()
     print(f"Now visit {auth_url} and copy the URL you are redirected to")

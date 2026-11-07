@@ -5,7 +5,7 @@ from gunicorn.app.base import BaseApplication as GunicornBaseApplication
 
 from weight_tracker.analysis import day_data, days
 from weight_tracker.auth import start_login, complete_login
-from weight_tracker.fitbit import add_readings_to_database
+from weight_tracker.google_health import add_readings_to_database
 from weight_tracker.google_sheet import write_google_sheet
 from weight_tracker.tsv_file import write_tsv
 

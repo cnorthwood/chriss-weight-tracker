@@ -1,5 +1,4 @@
-from datetime import datetime, date, time
-import json
+from datetime import datetime
 import os
 import sqlite3
 
@@ -17,6 +16,9 @@ def ensure_schema():
         )
         """
     )
+    # Google Health's IDs for readings don't match the Fitbit logIds already stored, so readings are identified
+    # by when they were taken instead
+    cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS readings_reading_date ON readings (readingDate)")
     db.commit()
 
 
@@ -33,14 +35,10 @@ def first_reading_date():
     return datetime.fromisoformat(result).date()
 
 
-def insert_reading(reading):
+def insert_reading(reading_time: datetime, weight_kg: float):
     cursor.execute(
-        "INSERT INTO readings (logId, readingDate, weight) VALUES(?, ?, ?) ON CONFLICT DO NOTHING",
-        (
-            reading["logId"],
-            reading_datetime(reading).isoformat(),
-            reading["weight"],
-        ),
+        "INSERT INTO readings (readingDate, weight) VALUES(?, ?) ON CONFLICT DO NOTHING",
+        (reading_time.isoformat(), weight_kg),
     )
     db.commit()
 
@@ -64,9 +62,3 @@ def get_last_known_weight_at(point_in_time):
         ).fetchone()
 
     return result[0]
-
-
-def reading_datetime(reading):
-    return datetime.combine(
-        date.fromisoformat(reading["date"]), time.fromisoformat(reading["time"])
-    )
