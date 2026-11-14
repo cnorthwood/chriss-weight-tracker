@@ -3,6 +3,12 @@ googleSheetUrl: https://docs.google.com/spreadsheets/d/1WC4_CCVEiTwaCj-gG-5IscpN
 
 googleOAuthSecretName: google-oauth
 
+# Write to the sheet as the Google service account through workload identity federation, set up in omelette-gay/gitops
+googleWorkloadIdentity:
+  serviceAccountName: sheet-writer
+  credentialsConfigMapName: google-credentials
+  audience: https://iam.googleapis.com/projects/211831137824/locations/global/workloadIdentityPools/coven/providers/coven-k3s
+
 ingress:
   hostname: meg.weight-tracker.omelette.gay
   annotations:

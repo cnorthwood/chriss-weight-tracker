@@ -1,11 +1,13 @@
-import os
-
+import google.auth
 import gspread
 from gspread.utils import ValueInputOption
 
 
 def write_google_sheet(sheet_url, data):
-    client = gspread.service_account(os.environ["GOOGLE_SERVICE_ACCOUNT"])
+    # Application Default Credentials: a service account key, or a workload identity federation config, named by
+    # GOOGLE_APPLICATION_CREDENTIALS
+    credentials, _ = google.auth.default(scopes=gspread.auth.DEFAULT_SCOPES)
+    client = gspread.authorize(credentials)
     sheet = client.open_by_url(sheet_url).get_worksheet(0)
 
     sheet.update(

@@ -43,7 +43,7 @@ You can also have this write directly to the Google Sheet if you'd like. To do t
 3. Make a note of the service account email, and share your Google Sheet with this email account.
 4. On the service account screen, create a key and download it in JSON form.
 
-Now you can run the command `WEIGHT_DATABASE=weight.sqlite GOOGLE_CLIENT_ID=<client ID from above> GOOGLE_CLIENT_SECRET=<client secret from above> GOOGLE_SERVICE_ACCOUNT=service-account.json HEIGHT=<your height in cm> poetry run python3 -mweight_tracker --google-sheet <sheet URL>`
+Now you can run the command `WEIGHT_DATABASE=weight.sqlite GOOGLE_CLIENT_ID=<client ID from above> GOOGLE_CLIENT_SECRET=<client secret from above> GOOGLE_APPLICATION_CREDENTIALS=service-account.json HEIGHT=<your height in cm> poetry run python3 -mweight_tracker --google-sheet <sheet URL>`
 
 The final option available to you is to start a webserver which further simplifies the login process. Then you just need
 to visit the URL and you will be taken through the sync process and it will save the output as specified. Add `--server 3000`
@@ -64,6 +64,12 @@ Now you can install the chart into your cluster:
 Make sure `https://<ingress.hostname>/` is added as an authorised redirect URI on your OAuth client (the trailing slash
 matters). Now you should be able to visit that URL and you will go through the Google login process and it will sync to
 the specified Google sheet. If you'd like to use a different secret name, set `googleOAuthSecretName` in the chart.
+
+Instead of a service account key, the app can act as the service account through
+[workload identity federation](https://cloud.google.com/iam/docs/workload-identity-federation-with-kubernetes), so
+there's no key to look after. Set `googleWorkloadIdentity` in the chart (see `values.yaml`) to the Kubernetes service
+account that's allowed to act as the Google service account, a ConfigMap holding the credentials config in the key
+`credentials.json`, and the pool provider's audience. Then you don't need the `google-service-account` secret.
 
 License
 -------
