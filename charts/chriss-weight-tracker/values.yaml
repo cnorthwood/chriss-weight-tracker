@@ -12,7 +12,19 @@ googleSheetUrl: ""
 googleOAuthSecretName: google-oauth
 
 # the name of the secret to read the Google service account credentials from - the body of the json file must be stored in the key `service-account.json` in this secret
+# not used if googleWorkloadIdentity.serviceAccountName is set
 googleServiceAccountSecretName: google-service-account
+
+# to act as the Google service account through workload identity federation instead of with a key, set all of these
+googleWorkloadIdentity:
+  # the Kubernetes service account to run as, which is allowed to act as the Google service account
+  serviceAccountName: ""
+  # a ConfigMap holding the credentials config for Google's client libraries in the key `credentials.json`
+  credentialsConfigMapName: ""
+  # the audience of the workload identity pool provider (https://iam.googleapis.com/projects/...)
+  audience: ""
+  # where the credentials config expects the Kubernetes service account token
+  tokenPath: /var/run/secrets/google/token
 
 # how much storage to allocate for the sqlite database
 dbStorageRequest: 100Mi

@@ -20,6 +20,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.googleWorkloadIdentity.serviceAccountName }}
+      serviceAccountName: {{ . | quote }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -50,15 +53,26 @@ spec:
                 secretKeyRef:
                   name: "{{ .Values.googleOAuthSecretName }}"
                   key: GOOGLE_CLIENT_SECRET
-            - name: GOOGLE_SERVICE_ACCOUNT
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              {{- if .Values.googleWorkloadIdentity.serviceAccountName }}
+              value: "/data/google-credentials/credentials.json"
+              {{- else }}
               value: "/data/google-service-account/service-account.json"
+              {{- end }}
             - name: HEIGHT
               value: "{{ .Values.height }}"
             - name: TRUST_PROXY_HEADERS
               value: "true"
           volumeMounts:
+            {{- if .Values.googleWorkloadIdentity.serviceAccountName }}
+            - mountPath: /data/google-credentials
+              name: google-credentials
+            - mountPath: {{ dir .Values.googleWorkloadIdentity.tokenPath | quote }}
+              name: google-token
+            {{- else }}
             - mountPath: /data/google-service-account
               name: google-service-account
+            {{- end }}
             - mountPath: /data/db
               name: db
           ports:
@@ -67,9 +81,22 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
+        {{- if .Values.googleWorkloadIdentity.serviceAccountName }}
+        - name: google-credentials
+          configMap:
+            name: {{ required "googleWorkloadIdentity.credentialsConfigMapName is required" .Values.googleWorkloadIdentity.credentialsConfigMapName | quote }}
+        - name: google-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: {{ required "googleWorkloadIdentity.audience is required" .Values.googleWorkloadIdentity.audience | quote }}
+                  expirationSeconds: 3600
+                  path: {{ base .Values.googleWorkloadIdentity.tokenPath | quote }}
+        {{- else }}
         - name: google-service-account
           secret:
             secretName: "{{ .Values.googleServiceAccountSecretName }}"
+        {{- end }}
         - name: db
           persistentVolumeClaim:
             claimName: '{{ include "chriss-weight-tracker.fullname" . }}-db'
