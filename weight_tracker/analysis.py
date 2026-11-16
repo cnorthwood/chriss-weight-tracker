@@ -22,13 +22,9 @@ def day_data(day):
     last_month = day - timedelta(days=30)
 
     todays_weight = weight_for(day)
-    moving_average_weight = weight_for(last_week, day)
-    last_weeks_moving_average_weight = weight_for(
-        last_week - timedelta(days=7), last_week
-    )
-    last_months_moving_average_weight = weight_for(
-        last_month - timedelta(days=7), last_month
-    )
+    moving_average_weight = moving_average_weight_for(day)
+    last_weeks_moving_average_weight = moving_average_weight_for(last_week)
+    last_months_moving_average_weight = moving_average_weight_for(last_month)
 
     return {
         "date": day.strftime("%d/%m/%Y"),
@@ -41,6 +37,15 @@ def day_data(day):
         "monthly_weight_delta": f"{moving_average_weight - last_months_moving_average_weight:.1f}",
         "monthly_bmi_delta": f"{bmi(moving_average_weight) - bmi(last_months_moving_average_weight):.2f}",
     }
+
+
+MOVING_AVERAGE_DAYS = 7
+
+
+def moving_average_weight_for(end_day):
+    # Both ends of the range are inclusive, so the window starts (N - 1) days before the end day
+    start_day = end_day - timedelta(days=MOVING_AVERAGE_DAYS - 1)
+    return weight_for(start_day, end_day)
 
 
 def weight_for(start_day, end_day=None):
